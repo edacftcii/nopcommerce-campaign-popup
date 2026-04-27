@@ -1,0 +1,28 @@
+is_global = true
+build_property.TargetFramework = net6.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = Nop.Plugin.Widgets.CampaignPopup
+build_property.RootNamespace = Nop.Plugin.Widgets.CampaignPopup
+build_property.ProjectDir = /Users/eda/Projects/nopCommerce_4_50_product_ribbon/src/Plugins/Nop.Plugin.Widgets.CampaignPopup/
+build_property.RazorLangVersion = 6.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = true
+build_property.MSBuildProjectDirectory = /Users/eda/Projects/nopCommerce_4_50_product_ribbon/src/Plugins/Nop.Plugin.Widgets.CampaignPopup
+build_property._RazorSourceGeneratorDebug = 
+
+[/Users/eda/Projects/nopCommerce_4_50_product_ribbon/src/Plugins/Nop.Plugin.Widgets.CampaignPopup/Views/CampaignPopup/Configure.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2FtcGFpZ25Qb3B1cC9Db25maWd1cmUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/eda/Projects/nopCommerce_4_50_product_ribbon/src/Plugins/Nop.Plugin.Widgets.CampaignPopup/Views/CampaignPopup/PublicInfo.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2FtcGFpZ25Qb3B1cC9QdWJsaWNJbmZvLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/eda/Projects/nopCommerce_4_50_product_ribbon/src/Plugins/Nop.Plugin.Widgets.CampaignPopup/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 

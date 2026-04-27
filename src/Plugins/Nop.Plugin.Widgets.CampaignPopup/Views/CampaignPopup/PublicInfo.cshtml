@@ -1,0 +1,122 @@
+@model Nop.Plugin.Widgets.CampaignPopup.Models.PublicInfoModel
+@{
+    Layout = "";
+    var popupId = "campaign-popup-overlay";
+}
+
+<style>
+    .campaign-popup-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: rgba(0, 0, 0, 0.68);
+    }
+
+    .campaign-popup-overlay.is-visible {
+        display: flex;
+    }
+
+    .campaign-popup-modal {
+        position: relative;
+        width: min(92vw, 720px);
+        max-height: 90vh;
+        border-radius: 18px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+        animation: campaignPopupIn 0.25s ease-out;
+    }
+
+    .campaign-popup-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 2;
+        width: 38px;
+        height: 38px;
+        border: 0;
+        border-radius: 50%;
+        background: rgba(17, 17, 17, 0.72);
+        color: #fff;
+        font-size: 22px;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    .campaign-popup-link,
+    .campaign-popup-image {
+        display: block;
+        width: 100%;
+    }
+
+    .campaign-popup-image {
+        height: auto;
+    }
+
+    @@keyframes campaignPopupIn {
+        from {
+            opacity: 0;
+            transform: translateY(14px) scale(0.97);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+</style>
+
+<div id="@popupId" class="campaign-popup-overlay" aria-hidden="true">
+    <div class="campaign-popup-modal" role="dialog" aria-modal="true" aria-label="Campaign popup">
+        <button type="button" class="campaign-popup-close" aria-label="Close popup">&times;</button>
+        @if (!string.IsNullOrWhiteSpace(Model.RedirectUrl))
+        {
+            <a class="campaign-popup-link" href="@Model.RedirectUrl" target="_blank" rel="noopener noreferrer">
+                <img class="campaign-popup-image" src="@Model.ImageUrl" alt="Campaign popup" />
+            </a>
+        }
+        else
+        {
+            <img class="campaign-popup-image" src="@Model.ImageUrl" alt="Campaign popup" />
+        }
+    </div>
+</div>
+
+<script asp-location="Footer">
+    (function () {
+        var popup = document.getElementById('@popupId');
+        if (!popup) {
+            return;
+        }
+
+        var closeButton = popup.querySelector('.campaign-popup-close');
+        var link = popup.querySelector('.campaign-popup-link');
+        var closePopup = function () {
+            popup.classList.remove('is-visible');
+            popup.setAttribute('aria-hidden', 'true');
+        };
+
+        popup.classList.add('is-visible');
+        popup.setAttribute('aria-hidden', 'false');
+
+        closeButton.addEventListener('click', closePopup);
+        if (link) {
+            link.addEventListener('click', closePopup);
+        }
+        popup.addEventListener('click', function (event) {
+            if (event.target === popup) {
+                closePopup();
+            }
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && popup.classList.contains('is-visible')) {
+                closePopup();
+            }
+        });
+    })();
+</script>

@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "fWn9tCXXdX5HV13/pfN+E/h2qNEUu9Edc4yk9Tu9qgY=",
+  "Source": "Nop.Plugin.Widgets.CampaignPopup",
+  "BasePath": "_content/Nop.Plugin.Widgets.CampaignPopup",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
