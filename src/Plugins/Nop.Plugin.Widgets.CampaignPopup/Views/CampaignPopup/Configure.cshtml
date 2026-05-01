@@ -4,12 +4,32 @@
     Layout = "_ConfigurePlugin";
 }
 
+<style>
+    .campaign-popup-config .uploaded-image,
+    .campaign-popup-config .uploaded-image img,
+    .campaign-popup-config .picture-container img {
+        max-width: 320px;
+        max-height: 220px;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+    }
+
+    .campaign-popup-config .picture-container {
+        overflow: hidden;
+    }
+    
+    .campaign-popup-config .form-group.row {
+        align-items: flex-start;
+    }
+</style>
+
 @await Component.InvokeAsync("StoreScopeConfiguration")
 
 <form asp-controller="CampaignPopup" asp-action="Configure" method="post">
     <section class="content">
         <div class="container-fluid">
-            <div class="cards-group">
+            <div class="cards-group campaign-popup-config">
                 <div class="card card-default">
                     <div class="card-header">
                         @T("Plugins.Widgets.CampaignPopup.Configuration")

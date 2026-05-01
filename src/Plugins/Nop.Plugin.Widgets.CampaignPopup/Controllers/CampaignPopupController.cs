@@ -57,7 +57,9 @@ namespace Nop.Plugin.Widgets.CampaignPopup.Controllers
 
             if (storeScope > 0)
             {
-                model.Enabled_OverrideForStore = await _settingService.SettingExistsAsync(widgetSettings, x => x.ActiveWidgetSystemNames, storeScope);
+                model.Enabled_OverrideForStore =
+                    await _settingService.SettingExistsAsync(settings, x => x.Enabled, storeScope) ||
+                    await _settingService.SettingExistsAsync(widgetSettings, x => x.ActiveWidgetSystemNames, storeScope);
                 model.PictureId_OverrideForStore = await _settingService.SettingExistsAsync(settings, x => x.PictureId, storeScope);
                 model.RedirectUrl_OverrideForStore = await _settingService.SettingExistsAsync(settings, x => x.RedirectUrl, storeScope);
             }
@@ -79,7 +81,7 @@ namespace Nop.Plugin.Widgets.CampaignPopup.Controllers
             settings.PictureId = model.PictureId;
             settings.RedirectUrl = model.RedirectUrl?.Trim();
 
-            await _settingService.SaveSettingOverridablePerStoreAsync(settings, x => x.Enabled, false, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(settings, x => x.Enabled, model.Enabled_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(settings, x => x.PictureId, model.PictureId_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(settings, x => x.RedirectUrl, model.RedirectUrl_OverrideForStore, storeScope, false);
 

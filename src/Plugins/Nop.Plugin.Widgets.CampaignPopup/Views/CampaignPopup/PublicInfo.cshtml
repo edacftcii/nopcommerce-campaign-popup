@@ -2,6 +2,7 @@
 @{
     Layout = "";
     var popupId = "campaign-popup-overlay";
+    var sessionKey = "nopCampaignPopupShown";
 }
 
 <style>
@@ -89,7 +90,7 @@
 <script asp-location="Footer">
     (function () {
         var popup = document.getElementById('@popupId');
-        if (!popup) {
+        if (!popup || window.sessionStorage.getItem('@sessionKey') === '1') {
             return;
         }
 
@@ -98,6 +99,7 @@
         var closePopup = function () {
             popup.classList.remove('is-visible');
             popup.setAttribute('aria-hidden', 'true');
+            window.sessionStorage.setItem('@sessionKey', '1');
         };
 
         popup.classList.add('is-visible');
@@ -105,7 +107,10 @@
 
         closeButton.addEventListener('click', closePopup);
         if (link) {
-            link.addEventListener('click', closePopup);
+            link.addEventListener('click', function () {
+                window.sessionStorage.setItem('@sessionKey', '1');
+                closePopup();
+            });
         }
         popup.addEventListener('click', function (event) {
             if (event.target === popup) {
