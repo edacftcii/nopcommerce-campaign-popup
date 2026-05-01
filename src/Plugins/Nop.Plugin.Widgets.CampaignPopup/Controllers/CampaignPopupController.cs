@@ -45,21 +45,18 @@ namespace Nop.Plugin.Widgets.CampaignPopup.Controllers
 
             var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var settings = await _settingService.LoadSettingAsync<CampaignPopupSettings>(storeScope);
-            var widgetSettings = await _settingService.LoadSettingAsync<WidgetSettings>(storeScope);
 
             var model = new ConfigurationModel
             {
                 ActiveStoreScopeConfiguration = storeScope,
-                Enabled = settings.Enabled && widgetSettings.ActiveWidgetSystemNames.Contains(CampaignPopupDefaults.SystemName),
+                Enabled = settings.Enabled,
                 PictureId = settings.PictureId,
                 RedirectUrl = settings.RedirectUrl
             };
 
             if (storeScope > 0)
             {
-                model.Enabled_OverrideForStore =
-                    await _settingService.SettingExistsAsync(settings, x => x.Enabled, storeScope) ||
-                    await _settingService.SettingExistsAsync(widgetSettings, x => x.ActiveWidgetSystemNames, storeScope);
+                model.Enabled_OverrideForStore = await _settingService.SettingExistsAsync(settings, x => x.Enabled, storeScope);
                 model.PictureId_OverrideForStore = await _settingService.SettingExistsAsync(settings, x => x.PictureId, storeScope);
                 model.RedirectUrl_OverrideForStore = await _settingService.SettingExistsAsync(settings, x => x.RedirectUrl, storeScope);
             }
@@ -75,7 +72,6 @@ namespace Nop.Plugin.Widgets.CampaignPopup.Controllers
 
             var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var settings = await _settingService.LoadSettingAsync<CampaignPopupSettings>(storeScope);
-            var widgetSettings = await _settingService.LoadSettingAsync<WidgetSettings>(storeScope);
 
             settings.Enabled = model.Enabled;
             settings.PictureId = model.PictureId;
@@ -85,12 +81,28 @@ namespace Nop.Plugin.Widgets.CampaignPopup.Controllers
             await _settingService.SaveSettingOverridablePerStoreAsync(settings, x => x.PictureId, model.PictureId_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(settings, x => x.RedirectUrl, model.RedirectUrl_OverrideForStore, storeScope, false);
 
-            if (model.Enabled && !widgetSettings.ActiveWidgetSystemNames.Contains(CampaignPopupDefaults.SystemName))
-                widgetSettings.ActiveWidgetSystemNames.Add(CampaignPopupDefaults.SystemName);
-            if (!model.Enabled && widgetSettings.ActiveWidgetSystemNames.Contains(CampaignPopupDefaults.SystemName))
-                widgetSettings.ActiveWidgetSystemNames.Remove(CampaignPopupDefaults.SystemName);
+            if (model.Enabled)
+            {
+                // Keep the widget active in the global widget list and in the selected store scope.
+                // The popup visibility itself is still controlled by CampaignPopupSettings.Enabled.
+                var globalWidgetSettings = await _settingService.LoadSettingAsync<WidgetSettings>();
+                if (!globalWidgetSettings.ActiveWidgetSystemNames.Contains(CampaignPopupDefaults.SystemName))
+                {
+                    globalWidgetSettings.ActiveWidgetSystemNames.Add(CampaignPopupDefaults.SystemName);
+                    await _settingService.SaveSettingAsync(globalWidgetSettings, x => x.ActiveWidgetSystemNames, clearCache: false);
+                }
 
-            await _settingService.SaveSettingOverridablePerStoreAsync(widgetSettings, x => x.ActiveWidgetSystemNames, model.Enabled_OverrideForStore, storeScope, false);
+                if (storeScope > 0)
+                {
+                    var scopedWidgetSettings = await _settingService.LoadSettingAsync<WidgetSettings>(storeScope);
+                    if (!scopedWidgetSettings.ActiveWidgetSystemNames.Contains(CampaignPopupDefaults.SystemName))
+                    {
+                        scopedWidgetSettings.ActiveWidgetSystemNames.Add(CampaignPopupDefaults.SystemName);
+                        await _settingService.SaveSettingAsync(scopedWidgetSettings, x => x.ActiveWidgetSystemNames, storeScope, false);
+                    }
+                }
+            }
+
             await _settingService.ClearCacheAsync();
 
             _notificationService.SuccessNotification(
